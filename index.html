@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TEXT-RIS : THE MISSING BLOCK</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#10141D;--cd:#1C2430;--ink:#F2EBDD;--bur:#A84450;--gold:#C6A66B;--mut:#98a0ad;--ln:#2d3748;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "Noto Serif KR",Georgia,serif;min-height:100vh}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;z-index:50;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+button{font:inherit;color:inherit;cursor:pointer}
+h3{font-size:14px;color:var(--gold);margin:18px 0 4px;font-weight:600}
+p{margin:0 0 8px}
+.btn{background:var(--bur);border:0;color:var(--ink);padding:12px 26px;border-radius:10px;font-weight:600;letter-spacing:.06em;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-2px);background:#bb5361}.btn:active{transform:scale(.96)}
+.btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold)}.btn.ghost:hover{background:rgba(198,166,107,.12)}
+.btn.sm{padding:6px 14px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.4;pointer-events:none}
+#nav{display:flex;gap:6px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--ln);flex-wrap:wrap;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:20}
+body.land #nav{display:none}
+#nav b{font:700 22px "Cormorant Garamond",serif;letter-spacing:.14em;margin-right:auto;cursor:pointer}
+#nav button{background:none;border:0;padding:6px 10px;border-radius:8px;color:var(--mut);transition:color .15s,background .15s}
+#nav button:hover{color:var(--ink);background:var(--cd)}
+#nav .sc{color:var(--gold);font-size:13px;padding-left:8px}
+.view{display:none;animation:in .35s}.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+#v-land{position:relative;min-height:100vh;overflow:hidden;text-align:center;padding:12vh 20px 40px}
+#v-land.on{display:block}
+.fl{position:absolute;bottom:0;opacity:.22;animation:fl linear infinite;will-change:transform}
+@keyframes fl{from{transform:translateY(20vh) rotate(0)}to{transform:translateY(-120vh) rotate(200deg)}}
+.fl i{position:absolute;width:20px;height:20px;border-radius:4px;background:var(--c)}
+.hero{position:relative;z-index:2}
+.logo{font:700 clamp(54px,14vw,130px)/1 "Cormorant Garamond",serif;letter-spacing:.08em;margin:0}
+.logo span{color:var(--bur)}
+.sub{letter-spacing:.5em;color:var(--gold);font-size:13px;margin:10px 0 28px}
+.tag{display:inline-block;font-size:11px;letter-spacing:.14em;color:var(--gold);border:1px solid var(--gold);padding:1px 8px;border-radius:20px;margin-bottom:6px}
+.pv{position:relative;z-index:2;margin:44px auto 0;max-width:420px;background:var(--cd);border:1px solid var(--ln);border-radius:14px;padding:16px;text-align:left;font-size:13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{padding:2px 10px;border-radius:6px;font-size:12px;background:var(--c);color:#10141D;font-weight:600}
+#v-read{padding:16px;max-width:1280px;margin:0 auto}
+.top{display:flex;gap:14px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.top h2{margin:0;font-size:18px}
+.bar{flex:1;min-width:120px;height:6px;background:var(--ln);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .4s}
+.cols{display:grid;grid-template-columns:1fr 290px 1fr;gap:16px;align-items:start}
+@media(max-width:980px){.cols{grid-template-columns:1fr}.mid{order:2}}
+.card{background:var(--cd);border:1px solid var(--ln);border-radius:14px;padding:18px}
+.em{color:var(--mut);font-size:13px}
+.sn{cursor:pointer;border-radius:4px;padding:1px 2px;transition:background .2s}
+.sn:hover{background:rgba(198,166,107,.15)}
+.sn.sel{background:rgba(168,68,80,.4)}
+.sn.ok::after{content:" CLEAR";font-size:10px;color:var(--gold);letter-spacing:.1em}
+#txt{font-size:16px;line-height:2}
+.mid{display:flex;flex-direction:column;align-items:center}
+#board{position:relative;width:240px;height:320px;border-radius:10px;border:2px solid var(--gold);background:#0c1017 repeating-linear-gradient(0deg,transparent 0 39px,#1b2230 39px 40px),repeating-linear-gradient(90deg,transparent 0 39px,#1b2230 39px 40px);overflow:visible}
+.cell{position:absolute;left:0;top:0;margin:1px;width:38px;height:38px;background:var(--c);border-radius:6px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.18),inset 0 -4px 0 rgba(0,0,0,.25);display:grid;place-items:center;font-size:13px;font-weight:600;color:rgba(16,20,29,.7)}
+.clr{animation:clr .38s forwards}
+@keyframes clr{50%{scale:1.12;filter:brightness(1.6)}to{opacity:0;scale:.5}}
+.pc{position:absolute;left:0;top:0;z-index:5;touch-action:none;cursor:grab;transition:transform .25s}
+.pc.hold{transition:none;cursor:grabbing;filter:drop-shadow(0 8px 10px rgba(0,0,0,.5))}
+#msg{min-height:24px;font-size:13px;color:var(--gold);margin:10px 0 2px;text-align:center}
+.bc{border:1px solid var(--ln);border-left:5px solid var(--c);border-radius:10px;padding:10px 12px;margin:8px 0;cursor:pointer;transition:background .15s}
+.bc:hover{background:#222c3a}
+.bh b{display:block;font-size:11px;letter-spacing:.12em;color:var(--c)}
+.bh span{font-weight:600}
+.bc p{font-size:13px;color:var(--mut);margin:2px 0 6px}
+.bd{display:none;font-size:13px;margin-bottom:8px;border-top:1px dashed var(--ln);padding-top:6px}
+.bc.open .bd{display:block}
+#combo{width:100%;margin-top:14px;font-size:13px}
+textarea{width:100%;min-height:70px;background:var(--bg);color:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:8px;font:inherit;resize:vertical;margin:6px 0}
+textarea:focus,button:focus-visible{outline:2px solid var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.view>.wrap{max-width:1000px;margin:0 auto;padding:24px 16px}
+.lock{opacity:.5}
+.modal{position:fixed;inset:0;background:rgba(8,10,15,.8);z-index:60;display:none;place-items:center;padding:16px}
+.modal.on{display:grid}
+.modal .card{max-width:460px;width:100%}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--bur);padding:10px 20px;border-radius:30px;opacity:0;transition:.3s;z-index:70;pointer-events:none;font-weight:600;letter-spacing:.04em}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="land">
+<div id="nav"><b data-go="land">TEXT-RIS</b><button data-go="read">독서</button><button data-go="lib">도서관</button><button data-go="notes">내 해석</button><button id="hb">HOW TO PLAY</button><span class="sc">SCORE <span id="sc">0</span></span></div>
+
+<section class="view on" id="v-land">
+<div id="fls"></div>
+<div class="hero">
+<h1 class="logo">TEXT<span>-</span>RIS</h1>
+<div class="sub">THE MISSING BLOCK</div>
+<p style="font-style:italic;color:var(--gold)">Fill the gap. Find the meaning.</p>
+<p>문학의 빈칸을 채우고, 새로운 의미를 발견하세요.</p>
+<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px"><button class="btn" data-go="read">START READING</button><button class="btn ghost" id="hb2">HOW TO PLAY</button></div>
+</div>
+<div class="pv"><span class="tag">PREVIEW</span><p>“…지위에 걸맞은 태도로 행동하며…”</p><p class="em">문장을 고르면 해설 블록 4개가 나타나고, 보드에 올려 나만의 해석을 완성합니다.</p>
+<div class="chips"><span class="chip" style="--c:#4C7BC0">역사</span><span class="chip" style="--c:#A84450">문화</span><span class="chip" style="--c:#C6A66B">작가</span><span class="chip" style="--c:#5E9A6E">언어</span></div></div>
+</section>
+
+<section class="view" id="v-read"><div>
+<div class="top"><h2>고골 《외투》</h2><span class="em" id="pt"></span><div class="bar"><i id="pb"></i></div></div>
+<div class="cols">
+<div class="card"><p class="em">아래는 직접 요약·재구성한 문장입니다. 이해가 어려운 문장을 눌러 보세요.</p><div id="txt"></div></div>
+<div class="mid"><div id="board"></div><div id="msg"></div>
+<div style="display:flex;gap:8px;align-items:center;width:240px"><span class="em">이해도</span><div class="bar"><i id="up"></i></div><button class="btn ghost sm" id="rb">RESET</button></div>
+<div class="card" id="combo"></div></div>
+<div class="card" id="panel"></div>
+</div></div></section>
+
+<section class="view" id="v-lib"><div class="wrap"><h2>RUSSIAN LITERATURE LIBRARY</h2>
+<div class="grid">
+<div class="card"><h3>외투</h3><p class="em">니콜라이 고골 · 1842</p><p>관청에서 살아가는 하급 관리와 새 외투 이야기.</p><button class="btn sm" data-go="read">읽기</button></div>
+<div class="card lock"><h3>죄와 벌</h3><p class="em">도스토옙스키</p><p>준비 중</p></div>
+<div class="card lock"><h3>안나 카레니나</h3><p class="em">톨스토이</p><p>준비 중</p></div>
+</div></div></section>
+
+<section class="view" id="v-notes"><div class="wrap"><h2>MY INTERPRETATIONS</h2><div id="nl"></div><h3>BADGES</h3><div id="bg" class="chips"></div></div></section>
+
+<div class="modal" id="how"><div class="card"><h2 style="margin-top:0">HOW TO PLAY</h2>
+<ol><li>문학 작품을 읽는다.</li><li>이해하기 어려운 문장을 선택한다.</li><li>데모 분석이 해설 블록을 만든다.</li><li>블록을 보드로 올려 드래그해 배치한다. 탭하면 회전한다(R키도 가능).</li><li>두 개 이상 조합해 나만의 해석을 쓴다.</li></ol>
+<p class="em">가로 한 줄을 채우면 LINE CLEAR. 정답은 없고, 해석은 독자의 몫입니다.</p><button class="btn" id="hx">닫기</button></div></div>
+<div id="toast"></div>
+
+<script>
+const CS=40,W=6,H=8;
+const TY={h:{n:'HISTORY',k:'역사',c:'#4C7BC0',s:[[0,0],[0,1],[0,2],[1,2]]},c:{n:'CULTURE',k:'문화',c:'#A84450',s:[[0,0],[1,0],[2,0],[1,1]]},a:{n:'AUTHOR',k:'작가',c:'#C6A66B',s:[[1,0],[1,1],[1,2],[0,2]]},l:{n:'LANGUAGE',k:'언어',c:'#5E9A6E',s:[[1,0],[2,0],[0,1],[1,1]]}};
+const CB={ah:['위계와 풍자','신분 질서 속에서 고골이 웃음 뒤에 숨긴 비판을 읽어 볼 수 있습니다.'],ch:['시대의 관습','제도와 생활 관습이 개인의 하루를 어떻게 규정했는지 볼 수 있습니다.'],hl:['제도의 말투','제도가 인물의 말과 서술 어조에 남긴 흔적을 따라가 볼 수 있습니다.'],ac:['사회의 시선','사회의 시선과 조롱을 작가가 어떻게 이야기로 만들었는지 살펴볼 수 있습니다.'],cl:['표현의 풍속','당시 관습이 표현 방식과 어조에 어떻게 스며 있는지 읽어 볼 수 있습니다.'],al:['고골의 문체','작가가 고른 어조와 표현이 의미를 어떻게 바꾸는지에 집중해 볼 수 있습니다.']};
+// 분석 로직: 나중에 실제 AI API 호출로 교체할 수 있도록 분리
+const DB=[
+{t:'아카키 아카키예비치는 관청에서 자신의 지위에 걸맞은 태도로 행동하며, 매일 반복되는 일상 속에서 살아갔다.',why:'‘지위에 걸맞은 태도’는 당시 관등 체계를 모르면 평범한 칭찬처럼 읽히기 쉽습니다.',q:'아카키의 ‘걸맞은 태도’는 스스로 선택한 것일까요, 사회가 만든 것일까요?',b:[
+['h','관료제와 신분 질서','표트르 1세의 관등표','1722년 표트르 1세가 만든 관등표는 문관·무관을 14등급으로 나눠 승진 순서와 대우를 정했습니다. 아카키는 9등관으로 그려져, 오래 일해도 더 올라가지 못하는 처지를 보여 줍니다.'],
+['c','직위와 대우','직급이 곧 존중의 크기','관료 사회에서 관등은 곧 사회적 존재감이었습니다. 직위가 낮으면 인사와 말투, 자리 배치에서도 낮은 대우를 받기 쉬웠고, ‘걸맞은 태도’는 그 위계를 받아들이는 몸가짐을 뜻합니다.'],
+['a','고골의 풍자','칭찬처럼 보이는 비꼼','서술자는 담담히 칭찬하는 척하면서 인물의 초라한 삶을 드러냅니다. ‘걸맞다’는 말은 그의 지위가 얼마나 낮은지를 은근히 확인하는 장치로 읽을 수 있습니다.'],
+['l','반복되는 표현','‘매일’이 만드는 리듬','‘매일 반복되는’은 변화 없는 삶을 문장의 리듬으로 느끼게 합니다. 이름과 부칭이 모두 ‘아카키’로 겹치는 점도 단조로움과 우스꽝스러움을 더합니다.']]},
+{t:'동료들은 그를 놀려도 되는 사람처럼 대했고, 그는 대꾸 없이 서류를 베껴 쓰기만 했다.',why:'조용히 참는 모습이 성격 때문인지 제도 때문인지 구분하기 어렵습니다.',q:'대꾸하지 않는 것은 약함일까요, 다른 선택지가 없었던 걸까요?',b:[
+['h','필사 노동','관청의 문서 베껴 쓰기','당시 관청에서는 문서를 손으로 베껴 쓰는 일이 하급 관리 몫으로 많았습니다. 작품 속 필사 업무는 반복이 많고 승진 가능성이 낮은 자리로 그려집니다.'],
+['c','서열과 조롱','낮은 자리가 만드는 놀림감','후원자나 직급이 부족한 사람은 동료 사이에서도 약자가 되기 쉬웠습니다. 놀림은 개인 간 장난을 넘어 서열 문화가 드러나는 장면입니다.'],
+['a','‘작은 사람’ 형상','힘없는 인물을 보는 시선','《외투》는 힘없는 하급 관리를 중심에 둔 ‘작은 사람’ 이야기의 대표작으로 꼽힙니다. 고골은 조롱과 연민을 함께 두어 독자가 어느 쪽에 설지 고민하게 합니다.'],
+['l','대꾸 없는 인물','말 없는 주인공','아카키는 말이 거의 없고 말끝도 흐려지는 인물로 그려집니다. 대사가 적다는 점이 그의 고립과 무력함을 보여 줍니다.']]},
+{t:'새 외투를 맞추기로 한 뒤, 그의 삶은 처음으로 어떤 목표를 갖게 되었다.',why:'외투가 단순한 옷이 아니라는 점을 알아야 ‘목표’의 무게가 보입니다.',q:'외투를 갖고 싶은 마음은 허영일까요, 살아 있다는 감각일까요?',b:[
+['h','페테르부르크의 추위','겨울 도시의 외투','페테르부르크는 겨울이 매섭고 바람이 거센 도시입니다. 외투는 사치품이 아니라 겨울 출근을 버티게 하는 필수품이었고, 낡은 외투는 곤란과 놀림의 이유가 되었습니다.'],
+['c','옷과 체면','옷이 곧 신분','옷차림은 신분과 체면을 보여 주는 표지였습니다. 새 외투는 따뜻함뿐 아니라 사람들의 시선이 달라질 기대를 줍니다.'],
+['a','사소한 것의 힘','작은 물건에 담긴 큰 욕망','고골은 사소한 물건 하나가 한 사람의 삶 전체를 움직이는 상황을 진지하면서도 우습게 그립니다. 그 간극이 작품의 웃음과 슬픔을 함께 만듭니다.'],
+['l','‘목표’라는 단어','처음 생긴 방향','‘처음으로’는 지금까지의 삶에 방향이 없었음을 알려 줍니다. 서술자는 큰 이상이 아닌 외투를 목표로 삼는 낙차를 담담히 전합니다.']]}];
+const analyze=i=>DB[i];
+const $=s=>document.querySelector(s);
+let st={score:0,cleared:{},notes:[],badges:[]};
+try{Object.assign(st,JSON.parse(localStorage.getItem('textris')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('textris',JSON.stringify(st))}catch(e){}};
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),1800)}
+function msg(m){$('#msg').textContent=m}
+function go(v){document.body.classList.toggle('land',v==='land');document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));if(v==='notes')renderNotes();scrollTo(0,0)}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
+const how=o=>$('#how').classList.toggle('on',o);
+$('#hb').onclick=$('#hb2').onclick=()=>how(1);$('#hx').onclick=()=>how(0);
+
+let cur=-1,placed=[],grid,act=null,draft='';
+function hud(){$('#sc').textContent=st.score;const n=Object.keys(st.cleared).length;$('#pb').style.width=n/DB.length*100+'%';$('#pt').textContent='작품 진행 '+n+'/'+DB.length;$('#up').style.width=(cur<0?0:placed.length/4*100)+'%'}
+function renderText(){$('#txt').innerHTML=DB.map((s,i)=>'<span class="sn'+(i===cur?' sel':'')+(st.cleared[i]?' ok':'')+'" data-i="'+i+'">'+s.t+'</span>').join(' ')}
+$('#txt').addEventListener('click',e=>{const s=e.target.closest('.sn');if(s)pick(+s.dataset.i)});
+function pick(i){cur=i;placed=[];draft='';resetBoard();renderText();renderPanel();renderCombo();hud();msg('블록을 골라 보드에 올려 보세요')}
+function renderPanel(){const p=$('#panel');if(cur<0){p.innerHTML='<p class="em">왼쪽에서 이해가 어려운 문장을 눌러 보세요.</p>';return}
+try{const s=analyze(cur);p.innerHTML='<span class="tag">DEMO AI ANALYSIS</span><h3 style="margin-top:6px">이해가 어려울 수 있는 이유</h3><p>'+s.why+'</p>'+s.b.map((b,i)=>'<div class="bc" style="--c:'+TY[b[0]].c+'"><div class="bh"><b>'+TY[b[0]].n+' BLOCK</b><span>'+b[1]+'</span></div><p>'+b[2]+'</p><div class="bd">'+b[3]+'</div><button class="btn sm" data-put="'+i+'"'+(placed.includes(i)?' disabled>배치 완료':'>보드에 올리기')+'</button></div>').join('')+'<h3>더 생각해 볼 질문</h3><p>'+s.q+'</p>'}catch(e){p.innerHTML='<p class="em">분석을 불러오지 못했습니다.</p>'}}
+$('#panel').addEventListener('click',e=>{const b=e.target.closest('[data-put]');if(b){put(+b.dataset.put);return}const c=e.target.closest('.bc');if(c)c.classList.toggle('open')});
+
+function resetBoard(){grid=Array.from({length:H},()=>Array(W).fill(null));if(act){act.el.remove();act=null}drawBoard()}
+function drawBoard(){const b=$('#board');b.querySelectorAll(':scope > .cell').forEach(e=>e.remove());grid.forEach((r,y)=>r.forEach((v,x)=>{if(v){const d=document.createElement('i');d.className='cell';d.dataset.y=y;d.style.cssText='--c:'+TY[v].c+';transform:translate('+x*CS+'px,'+y*CS+'px)';d.textContent=TY[v].k[0];b.appendChild(d)}}))}
+const norm=c=>{const mx=Math.min(...c.map(p=>p[0])),my=Math.min(...c.map(p=>p[1]));return c.map(p=>[p[0]-mx,p[1]-my])};
+function mkPc(){const e=act.el;e.className='pc';e.innerHTML=act.cells.map(p=>'<i class="cell" style="--c:'+TY[act.t].c+';transform:translate('+p[0]*CS+'px,'+p[1]*CS+'px)">'+TY[act.t].k[0]+'</i>').join('')}
+const mv=()=>{act.el.style.transform='translate('+act.px+'px,'+act.py+'px)'};
+function put(i){if(cur<0||placed.includes(i))return;if(act)act.el.remove();const t=DB[cur].b[i][0];act={i,t,cells:norm(TY[t].s),px:CS,py:0,el:document.createElement('div')};mkPc();$('#board').appendChild(act.el);mv();msg(TY[t].n+' · '+DB[cur].b[i][1]+' — 드래그해서 배치, 탭하면 회전')}
+const fits=(c,gx,gy)=>c.every(p=>{const x=p[0]+gx,y=p[1]+gy;return x>=0&&x<W&&y>=0&&y<H&&!grid[y][x]});
+function rot(){if(!act)return;act.cells=norm(act.cells.map(p=>[-p[1],p[0]]));mkPc()}
+const bd=$('#board');
+bd.addEventListener('pointerdown',e=>{if(!act||!act.el.contains(e.target))return;act.drag={sx:e.clientX,sy:e.clientY,ox:act.px,oy:act.py,mv:false};try{act.el.setPointerCapture(e.pointerId)}catch(x){}act.el.classList.add('hold')});
+bd.addEventListener('pointermove',e=>{const d=act&&act.drag;if(!d)return;const dx=e.clientX-d.sx,dy=e.clientY-d.sy;if(Math.abs(dx)+Math.abs(dy)>5)d.mv=true;if(d.mv){act.px=d.ox+dx;act.py=d.oy+dy;mv()}});
+bd.addEventListener('pointerup',e=>{const d=act&&act.drag;if(!d)return;act.drag=null;act.el.classList.remove('hold');if(!d.mv){rot();return}
+const gx=Math.round(act.px/CS),gy=Math.round(act.py/CS);if(fits(act.cells,gx,gy))land(gx,gy);else{act.px=CS;act.py=0;mv();msg('그 자리에는 놓을 수 없어요')}});
+addEventListener('keydown',e=>{if((e.key==='r'||e.key==='R')&&act&&!/TEXTAREA/.test(document.activeElement.tagName))rot()});
+function land(gx,gy){act.cells.forEach(p=>grid[p[1]+gy][p[0]+gx]=act.t);act.el.remove();placed.push(act.i);act=null;drawBoard();st.score+=10;
+if(placed.length>1){toast('COMBO ×'+(placed.length-1));st.score+=5*(placed.length-1)}
+const full=grid.map((r,y)=>r.every(Boolean)?y:-1).filter(y=>y>=0);
+if(full.length){bd.querySelectorAll('.cell').forEach(c=>{if(full.includes(+c.dataset.y))c.classList.add('clr')});setTimeout(()=>{grid=grid.filter((r,y)=>!full.includes(y));while(grid.length<H)grid.unshift(Array(W).fill(null));drawBoard();st.score+=50*full.length;toast('LINE CLEAR +'+50*full.length);hud();save()},400)}
+save();msg('배치 완료. 다른 블록도 올려 조합해 보세요');renderPanel();renderCombo();hud()}
+$('#rb').onclick=()=>{placed=[];resetBoard();renderPanel();renderCombo();hud();msg('보드를 비웠어요')};
+
+function types(){return [...new Set(placed.map(j=>DB[cur].b[j][0]))].sort()}
+function renderCombo(){const o=$('#combo');if(cur<0||placed.length<2){o.innerHTML='<p class="em">블록을 두 개 이상 올리면 해석 관점이 조합됩니다.</p>';return}
+const ts=types(),ps=[];for(let i=0;i<ts.length;i++)for(let j=i+1;j<ts.length;j++)ps.push(ts[i]+ts[j]);
+o.innerHTML='<h3 style="margin-top:0">내가 고른 관점</h3><div class="chips">'+ts.map(t=>'<span class="chip" style="--c:'+TY[t].c+'">'+TY[t].k+'</span>').join('')+'</div><h3>이 조합으로 생각해 볼 수 있는 해석</h3>'+ps.map(k=>'<p><b>'+CB[k][0]+'</b> — '+CB[k][1]+'</p>').join('')+'<textarea id="mine" placeholder="나만의 해석을 써 보세요">'+draft+'</textarea><button class="btn sm" id="sv">해석 저장</button>';
+$('#mine').oninput=e=>draft=e.target.value;$('#sv').onclick=saveNote}
+function saveNote(){const t=draft.trim();if(!t){toast('해석을 한 줄 써 주세요');return}const ts=types();
+st.notes.unshift({w:'외투',s:DB[cur].t,ty:ts,tx:t,d:new Date().toLocaleDateString('ko-KR')});st.cleared[cur]=1;st.score+=30;
+for(let i=0;i<ts.length;i++)for(let j=i+1;j<ts.length;j++){const k=ts[i]+ts[j];if(!st.badges.includes(k)){st.badges.push(k);toast('NEW BADGE · '+CB[k][0])}}
+save();draft='';renderText();renderCombo();hud();if(!$('#toast').classList.contains('on'))toast('해석을 저장했어요 · CLEAR')}
+function renderNotes(){$('#nl').innerHTML=st.notes.length?st.notes.map((n,i)=>'<div class="card" style="margin-bottom:12px"><span class="em">'+n.w+' · '+n.d+'</span><p style="margin:4px 0">“'+n.s+'”</p><div class="chips">'+n.ty.map(t=>'<span class="chip" style="--c:'+TY[t].c+'">'+TY[t].k+'</span>').join('')+'</div><p style="margin-top:8px"></p><button class="btn ghost sm" data-del="'+i+'">삭제</button></div>').join(''):'<p class="em">아직 저장한 해석이 없어요. 독서에서 블록을 조합해 첫 해석을 써 보세요.</p>';
+document.querySelectorAll('#nl .card').forEach((c,i)=>{c.querySelector('p:nth-of-type(2)').textContent=st.notes[i].tx});
+$('#bg').innerHTML=st.badges.length?st.badges.map(k=>'<span class="chip" style="--c:#C6A66B">'+CB[k][0]+'</span>').join(''):'<span class="em">새로운 조합을 발견하면 배지를 얻어요.</span>'}
+$('#nl').addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(d){st.notes.splice(+d.dataset.del,1);save();renderNotes()}});
+
+(function(){const f=$('#fls'),ks=Object.keys(TY);for(let n=0;n<14;n++){const t=TY[ks[n%4]],d=document.createElement('div');d.className='fl';d.style.cssText='left:'+(Math.random()*95)+'%;animation-duration:'+(22+Math.random()*20)+'s;animation-delay:-'+(Math.random()*30)+'s;scale:'+(.7+Math.random()*1.1);d.innerHTML=t.s.map(p=>'<i style="--c:'+t.c+';left:'+p[0]*22+'px;top:'+p[1]*22+'px"></i>').join('');f.appendChild(d)}})();
+resetBoard();renderText();renderPanel();renderCombo();hud();
+</script>
+</body>
+</html>
